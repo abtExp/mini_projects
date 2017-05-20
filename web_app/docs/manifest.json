@@ -1,0 +1,14 @@
+{
+  "name" : "Dashboard",
+  "short_name" : "Dashboard",
+  "start_url" : "index.html",
+  "display" : "standalone",
+  "background_color" : "#008382",
+  "theme_color" : "#008382",
+  "icons" : [
+  {
+    "src" : "ms-icon-144x44.png",
+    "sizes" : "144x144"
+  }
+]
+}

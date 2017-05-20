@@ -1,0 +1,92 @@
+*{
+	box-sizing: border-box;
+	outline : none;
+}
+
+html,body{
+	width : 100%;
+	padding : 100%;
+	margin : 0px;
+	padding : 0px;
+	text-align: center;
+	color : white;
+	font-family: consolas;
+}
+
+#board{
+	background : #dddddd;
+	border : 2px solid black;
+	width : 350px;
+	height : 350px;
+	margin : 30px auto;
+	display : flex;
+	flex-direction: column;
+}
+
+.cols{
+	display : flex;
+	flex : 1;
+}
+
+.Box{
+	flex : 1;
+	margin : 2px;
+	background : #fefefe;
+	border-radius: 4px;
+	font-size: 3em;
+	font-family : consolas;
+	padding : auto;
+}
+
+#score_board{
+	display : flex;
+	flex-direction: column;
+	box-shadow : 2px 5px 8px #dddddd;
+	margin : 5px auto;
+	width : 29.8%;
+	background : #000017;
+}
+
+#user_score .label{
+	color : #008382;
+	font-size : 1em;
+	font-family : consolas;
+}
+
+#reset{
+	background : #fe3254;
+	color : white;
+	border : none;
+	box-shadow : 2px 2px 4px #dddddd;
+	margin : 0px auto ;
+	padding : 5px;
+	font-size : 2em;
+	border-radius : 2px;
+	text-shadow: 1px 1px 2px #ffffff;
+}
+
+#ai_score .label{
+	color : #830082;
+	font-size : 1em;
+	font-family : consolas;	
+}
+
+#scores{
+	flex : 1;
+	display : flex;
+}
+.score{
+	flex : 1;
+	display : flex;
+	flex-direction: column;
+}
+
+.mark_score{
+	color : grey;
+	font-size: 1em;
+}
+
+#title{
+	color : grey;
+	font-size : 2em;
+}

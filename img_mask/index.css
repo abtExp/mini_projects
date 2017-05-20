@@ -1,0 +1,36 @@
+*{
+     box-sizing : border-box;
+}
+
+ body,html{
+     width : 100%;
+     height : 100%;
+     padding : 0px;
+     margin : 0px;
+     font-family : consolas;
+}
+
+#img_back{
+    width : 100%;
+    height : 40%;
+    background : #2e2a82;
+}
+
+#msg{
+    position : absolute;
+    top : 0px;
+    left : 0px;
+    color : white;
+    font-family : consolas;
+    font-size : 3em;
+    font-weight : bold;
+    text-shadow : 0 0 0 0.5 #ddd;
+}
+
+#mask{
+    z-index : 9;
+    width : 100%;
+    height : 100%;
+    opacity : 0.3;
+    background : #333;
+}
