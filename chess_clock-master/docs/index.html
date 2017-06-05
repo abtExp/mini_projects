@@ -14,30 +14,35 @@
 </head>
 <body>
 
-<button id="rotate_clock" class="btn"><i class="material-icons">rotate_90_degrees_ccw</i></button>
- <button id="clock_p1" class="timer"><p id="p1_min" class="timerss">00<p class="timerss">:</p><p id="p1_sec" class="timerss">00</p>
- </button>
- <button id="pomodoro" class="btn"><i class='material-icons'>timer</i></button>
- <button id="adj_time" class="btn"><i class="material-icons">alarm_add</i></button>
- <button id="clock_p2" class="timer"><p id="p2_min" class="timerss">00<p class="timerss">:</p><p id="p2_sec" class="timerss">00</p>
- </button>
- <button id="reset" class="btn"><i class="material-icons">refresh</i></button>
+<div id="time_zone">
+<!--timers goes in here-->
+</div>
 
- <div id="Add_times" class="invi">
- 	<button id="close_menu"><i class="material-icons">close</i></button>
- 	<div class="time" id="five" onclick="set_timer(this)">5 Mins.</div>
- 	<div class="time" id="ten" onclick="set_timer(this)">10 Mins.</div>
- 	<div class="time" id="fif" onclick="set_timer(this)">15 Mins.</div>
- 	<button id="add_time"><i class="material-icons">add</i></button>
- 	<div id="form">
- 	<button id="abort"><i class="material-icons">close</i></button>
- 	<input type="text" class="ip" id="p1" placeholder="T1(in Mins)" />
- 	<input type="text" class="ip" id="p2" placeholder="T2(in Mins)" />
- 	<button id="submit_time"><i class="material-icons">play_arrow</i></button>
- 	</div>
- </div>
+<button id="add_timer">
+      <i class="material-icons">add_circle</i>
+</button>
 
- <!-- Create a div for pomodoro timer -->
+<div id="form" style="display:none">
+      <label>
+      Hrs            
+      </label>
+      <input type="text" id="hrs" class="input" placeholder="00"/>
+
+      <label>
+      Mins            
+      </label>
+      <input type="text" id="mins" class="input" placeholder="00" />
+      
+      <label>
+      Secs
+      </label>
+      <input type="text" id="secs" class="input" placeholder="00"/>
+
+      <button id="submit">
+            <i class="material-icons">add_circle</i>
+      </button>
+</div>
+
 
 <script src="scr.js"></script>
 </body>

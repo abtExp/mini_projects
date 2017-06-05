@@ -1,174 +1,103 @@
 // Service worker registration
 
-window.onload = ()=>{
-	if(navigator.serviceWorker){
-		console.log("Registering Service Worker!");
-		navigator.serviceWorker.register('sw2.js')
-		.then((reg)=>{
-			console.log("Successfully Registered Service Worker!" + reg);
-		})
-		.catch((err)=>{
-			console.log("An Error Occured while registering service worker.");
-		});
-}
-}
+// window.onload = ()=>{
+// 	if(navigator.serviceWorker){
+// 		console.log("Registering Service Worker!");
+// 		navigator.serviceWorker.register('sw2.js')
+// 		.then((reg)=>{
+// 			console.log("Successfully Registered Service Worker!" + reg);
+// 		})
+// 		.catch((err)=>{
+// 			console.log("An Error Occured while registering service worker.");
+// 		});
+// }
+// }
 
 // Getting DOM Elements 
 
-var times = document.getElementsByClassName("choice");
+const zone = document.getElementById("time_zone");
+const timers = [];
 
-var d1 = document.getElementById("clock_p1");
-var d2 = document.getElementById("clock_p2");
+const add_timer = document.getElementById("add_timer");
+add_timer.addEventListener("click",toggle_form);
 
-var ad_tm = document.getElementById("adj_time");
-var add = document.getElementById("add_time");
-var menu = document.getElementById("Add_times");
-var close = document.getElementById("close_menu");
-var times = document.getElementsByClassName("time");
-var form = document.getElementById("form");
-var abort = document.getElementById("abort");
-var submit = document.getElementById("submit_time");
-var reset  = document.getElementById("reset");
+const time_config = document.getElementById("form");
 
-//Handling button clicks
+const submit = document.getElementById("submit");
+submit.addEventListener("click",get_vals);
 
-submit.addEventListener("click",()=>{
-	var p1 = document.getElementById("p1").value;
-	var p2 = document.getElementById("p2").value;
-	if(eval(p1)&&eval(p2)){
-		p1_pl.min = eval(p1);
-		p2_pl.min = eval(p2);
-		form.style.display = "none";
-		menu.className="invi";
-		disp_time();
+class Timers{
+	constructor(hrs,min,sec,color="#008382"){
+		this.hrs = hrs;
+		this.min = min;
+		this.sec = sec;
+		this.id = `timers_no.${timers.length}`;
+		this.clr = color;
+		this.finished = false;
+		this.set_time(min,sec);
+		this.display_time();
+	}
+
+	set_time(min,sec){
+		if(this.min >=60){
+			this.hrs += Math.floor(this.min/60);
+			this.min -= (Math.floor(this.min/60))*60;
+		}
+		if(this.sec >=60){
+			this.min += Math.floor(this.sec/60);
+			this.sec -= (Math.floor(this.sec/60))*60;
+		}
+	}
+
+	display_time(){
+		let div = document.createElement("div"),
+		sec = document.createElement("p"),
+		min = document.createElement("p"),
+		hrs = document.createElement("p");
+
+		hrs.innerHTML = this.hrs ? ((this.hrs < 10) ? `0${this.hrs} :` : `${this.hrs} :`) : '00: ';
+		min.innerHTML = this.min ? ((this.min < 10) ? `0${this.min} :` : `${this.min} :`) : '00: ';
+		sec.innerHTML = this.sec ? ((this.sec < 10) ? `0${this.sec}` : this.sec) : '00';
+		
+		hrs.id = this.id + "_hrs";
+		min.id = this.id + "_min";
+		sec.id = this.id + "_sec";
+
+		hrs.className = min.className = sec.className = "tim";
+
+		div.appendChild(hrs);
+		div.appendChild(min);
+		div.appendChild(sec);
+
+		div.id = this.id;
+		div.style.backgroundColor = this.clr;
+		div.className = "timer";
+		zone.appendChild(div);
+	}
+
+	update_time(){
+		
+	}
+
+}
+
+
+function get_vals(){
+	let hrs = parseInt(document.getElementById("hrs").value);
+	let min = parseInt(document.getElementById("mins").value);
+	let sec = parseInt(document.getElementById("secs").value);
+
+	// toggle_form();
+	if(hrs || min || sec){
+		timers.push(new Timers(hrs,min,sec));
+		toggle_form();
 	}
 	else{
-		var ips = document.getElementsByClassName('ip');
-		ips.forEach(i=>{
-			i.value = '';
-		});
+		alert("Please fill in atleast some time");
 	}
-})
-
-abort.addEventListener("click",()=>{
-	form.style.display = "none";
-})
-
-add.addEventListener("click",()=>{
-	form.style.display ="flex";
-})
-
-ad_tm.addEventListener("click",()=>{
-	menu.className = "flexy";
-});
-
-close.addEventListener("click",()=>{
-	menu.className = "invi";
-})
-
-reset.addEventListener("click",reset_timers);
-
-// Player Definitions
-
-var p1_pl = {
-	min : 0,
-	sec : 0,
-	min_hol : document.getElementById("p1_min"),
-	sec_hol : document.getElementById("p1_sec") 
+	// console.log(timers);
 }
 
-var p2_pl = {
-	min : 0,
-	sec : 0,
-	min_hol : document.getElementById("p2_min"),
-	sec_hol : document.getElementById("p2_sec") 	
-}
-
-
-var timer;
-
-var rot_btn = document.getElementById("rotate_clock");
-rot_btn.addEventListener('click',toggle);
-
-function toggle(){
-	if(d1.classList.contains('rotated')){
-		d1.classList.remove('rotated');
-	}
-	else d1.classList.add('rotated');
-}
-
-d1.addEventListener("click",()=>{start_timer(p2_pl)});
-d2.addEventListener("click",()=>{start_timer(p1_pl)});
-
-function start_timer(opponent){
-	clearInterval(timer);
-	timer = setInterval(()=>{update(opponent);},1000);
-}
-
-function update(time){
-	if(time.min != 0 || time.sec != 0){
-		if(time.sec === 0){
-			time.sec = 59;
-			time.min -= 1;
-		}
-		else{
-			time.sec -= 1;
-		}
-	}
-	else{
-		console.log("Timer expired!!!");
-		clearInterval(timer);
-		}
-	disp_time(time);
-}
-
-
-function disp_time(player){
-	if(player.min>9){
-		player.min_hol.innerHTML = player.min;
-	}
-	else{
-		player.min_hol.innerHTML = "0"+player.min;
-	}
-	// if(p2_pl.min>9){
-	// 	p2_pl.min_hol.innerHTML = p2_pl.min;
-	// }
-	// else{
-	// 	p2_pl.min_hol.innerHTML = "0"+p2_pl.min;
-	// }
-	if(player.sec>9){
-		player.sec_hol.innerHTML = player.sec;
-	}
-	else{
-		player.sec_hol.innerHTML = "0"+player.sec;
-	}
-	// if(p2_pl.sec>9){
-	// 	p2_pl.sec_hol.innerHTML = p2_pl.sec;
-	// }
-	// else{
-	// 	p2_pl.sec_hol.innerHTML = "0"+p2_pl.sec;
-	// } 
-}
-
-function set_timer(ch){
-	for(var i=0; i<times.length; i++){
-		if(ch === times[i]){
-			p1_pl.min = p2_pl.min = (i+1)*5;
-			p1_pl.sec = p2_pl.sec = 0;
-			clearInterval(timer);
-			disp_time(p1_pl);
-			disp_time(p2_pl);
-			menu.className = "invi";
-		}
-		else{
-			times[i].style.border = "none";
-		}
-	}
-}
-
-
-function reset_timers (){
-	p1_pl.min = p1_pl.sec = p2_pl.min = p2_pl.sec = 0;
-	disp_time(p1_pl);
-	disp_time(p2_pl);
+function toggle_form(){
+	time_config.style.display = time_config.style.display === "flex" ? "none" : "flex"; 
 }
