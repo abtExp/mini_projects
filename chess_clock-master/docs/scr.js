@@ -1,41 +1,55 @@
 // Service worker registration
 
-// window.onload = ()=>{
-// 	if(navigator.serviceWorker){
-// 		console.log("Registering Service Worker!");
-// 		navigator.serviceWorker.register('sw2.js')
-// 		.then((reg)=>{
-// 			console.log("Successfully Registered Service Worker!" + reg);
-// 		})
-// 		.catch((err)=>{
-// 			console.log("An Error Occured while registering service worker.");
-// 		});
-// }
-// }
+window.onload = ()=>{
+	if(navigator.serviceWorker){
+		console.log("Registering Service Worker!");
+		navigator.serviceWorker.register('sw2.js')
+		.then((reg)=>{
+			console.log("Successfully Registered Service Worker!" + reg);
+		})
+		.catch((err)=>{
+			console.log("An Error Occured while registering service worker.");
+		});
+}
+}
 
 // Getting DOM Elements 
 
+// const remote = require("electron").remote;
+// const ctrl = remote.require("./main.js"); 
+
 const zone = document.getElementById("time_zone");
 const timers = [];
+const activ_timrs = document.getElementsByClassName("timer");
 
 const add_timer = document.getElementById("add_timer");
-add_timer.addEventListener("click",toggle_form);
+add_timer.addEventListener("click",_=>{
+	// ctrl.open();
+	toggle_form();
+});
 
 const time_config = document.getElementById("form");
 
 const submit = document.getElementById("submit");
-submit.addEventListener("click",get_vals);
+submit.addEventListener("click",_=>{
+	get_vals();
+	if(get_vals) toggle_form();
+});
 
 class Timers{
-	constructor(hrs,min,sec,color="#008382"){
+	constructor({hrs,min,sec,color="#008382",title = "New Timer"}){
 		this.hrs = hrs;
 		this.min = min;
 		this.sec = sec;
 		this.id = `timers_no.${timers.length}`;
 		this.clr = color;
 		this.finished = false;
+		this.state = true;
+		this.title = title;
 		this.set_time(min,sec);
-		this.display_time();
+		this.create_timer();
+		check_class();
+		this.update_time();
 	}
 
 	set_time(min,sec){
@@ -49,34 +63,76 @@ class Timers{
 		}
 	}
 
-	display_time(){
+	create_timer(){
 		let div = document.createElement("div"),
 		sec = document.createElement("p"),
 		min = document.createElement("p"),
-		hrs = document.createElement("p");
+		hrs = document.createElement("p"),
+		title = document.createElement("p");
 
-		hrs.innerHTML = this.hrs ? ((this.hrs < 10) ? `0${this.hrs} :` : `${this.hrs} :`) : '00: ';
-		min.innerHTML = this.min ? ((this.min < 10) ? `0${this.min} :` : `${this.min} :`) : '00: ';
-		sec.innerHTML = this.sec ? ((this.sec < 10) ? `0${this.sec}` : this.sec) : '00';
+		hrs.innerHTML = this.hrs ? ((this.hrs < 10) ? `0${this.hrs} ` : `${this.hrs} `) : '00 ';
+		min.innerHTML = this.min ? ((this.min < 10) ? `0${this.min} ` : `${this.min} `) : '00 ';
+		sec.innerHTML = this.sec ? ((this.sec < 10) ? `0${this.sec} ` : this.sec) : '00';
+		title.innerHTML = this.title;
 		
 		hrs.id = this.id + "_hrs";
 		min.id = this.id + "_min";
 		sec.id = this.id + "_sec";
+		title.id = this.id + "_title";
 
 		hrs.className = min.className = sec.className = "tim";
+		title.className = "titl";
 
+		div.appendChild(title);
 		div.appendChild(hrs);
 		div.appendChild(min);
 		div.appendChild(sec);
-
+		
 		div.id = this.id;
 		div.style.backgroundColor = this.clr;
-		div.className = "timer";
+		div.classList.add("timer");
+		div.setAttribute("onclick","toggle_timer(this)");
 		zone.appendChild(div);
 	}
 
+	display(){
+		let hr = document.getElementById(`${this.id}_hrs`);
+		let min = document.getElementById(`${this.id}_min`);
+		let sec = document.getElementById(`${this.id}_sec`);
+
+
+		hr.innerHTML = (this.hrs < 10) ? `0${this.hrs}` : this.hrs;
+		min.innerHTML = (this.min < 10) ? `0${this.min}` : this.min;
+		sec.innerHTML = (this.sec < 10) ? `0${this.sec}` : this.sec;
+	}
+
 	update_time(){
-		
+		if(this.finished || !this.state){
+			clearInterval(this.timer);
+			return;
+		}
+		let timer = setInterval(_=>{
+			if(this.min !== 0 || this.sec !== 0 || this.hrs !== 0){
+				if(this.sec === 0 && this.min !== 0){
+					this.sec = 59;
+					this.min = this.min - 1;
+				}
+				if(this.min === 0 && this.hrs !== 0){
+					this.min = 59;
+					this.hrs = this.hrs - 1;
+				}
+				else{
+					this.sec -= 1;
+				}
+			}
+			else{
+				this.finished = true;
+				this.state = false;
+				clearInterval(this.timer);
+			}
+			this.display();
+		},1000);
+		this.timer = timer;
 	}
 
 }
@@ -86,18 +142,41 @@ function get_vals(){
 	let hrs = parseInt(document.getElementById("hrs").value);
 	let min = parseInt(document.getElementById("mins").value);
 	let sec = parseInt(document.getElementById("secs").value);
+	let title = document.getElementById("title").value;
 
 	// toggle_form();
 	if(hrs || min || sec){
-		timers.push(new Timers(hrs,min,sec));
-		toggle_form();
+		timers.push(new Timers({hrs,min,sec,title: title}));
+		if(timers.length > 1){
+			zone.classList.remove("solo");
+		}
 	}
 	else{
-		alert("Please fill in atleast some time");
+		return false;
 	}
 	// console.log(timers);
 }
 
 function toggle_form(){
 	time_config.style.display = time_config.style.display === "flex" ? "none" : "flex"; 
+}
+
+function check_class(){
+	if(zone.className !== "solo"){
+		for(let i=0; i<activ_timrs.length; i++){
+			if(activ_timrs[i].classList.contains("solo")){
+				activ_timrs[i].classList.remove("solo");
+				activ_timrs[i].classList.add("timr");
+			}
+		}
+	}
+}
+
+function toggle_timer(e){
+	for(let i=0; i<activ_timrs.length; i++){
+		if(e === activ_timrs[i]){
+			timers[i].state = !timers[i].state;
+			timers[i].update_time();
+		}
+	}
 }

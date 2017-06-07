@@ -14,15 +14,16 @@
 </head>
 <body>
 
-<div id="time_zone">
+<div id="time_zone"  class="solo">
 <!--timers goes in here-->
 </div>
 
 <button id="add_timer">
-      <i class="material-icons">add_circle</i>
+      <i class="material-icons">add</i>
 </button>
 
 <div id="form" style="display:none">
+      <div id="tim">
       <label>
       Hrs            
       </label>
@@ -37,9 +38,17 @@
       Secs
       </label>
       <input type="text" id="secs" class="input" placeholder="00"/>
+      </div>
+
+      <div id="titles">
+      <label>
+      Task Title
+      </label>
+      <input type="text" id="title" placeholder="task" />
+      </div>
 
       <button id="submit">
-            <i class="material-icons">add_circle</i>
+            <i class="material-icons">add_alarm</i>
       </button>
 </div>
 
