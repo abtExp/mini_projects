@@ -19,7 +19,7 @@ window.onload = ()=>{
 // const ctrl = remote.require("./main.js"); 
 
 const zone = document.getElementById("time_zone");
-const timers = [];
+let timers = [];
 const activ_timrs = document.getElementsByClassName("timer");
 
 const add_timer = document.getElementById("add_timer");
@@ -37,7 +37,7 @@ submit.addEventListener("click",_=>{
 });
 
 class Timers{
-	constructor({hrs,min,sec,color="#008382",title = "New Timer"}){
+	constructor({hrs=0,min=0,sec=0,color="#008382",title = "New Timer"}){
 		this.hrs = hrs;
 		this.min = min;
 		this.sec = sec;
@@ -65,28 +65,41 @@ class Timers{
 
 	create_timer(){
 		let div = document.createElement("div"),
+		ttl = document.createElement("div"),
+		tmz = document.createElement("div"),
 		sec = document.createElement("p"),
 		min = document.createElement("p"),
 		hrs = document.createElement("p"),
-		title = document.createElement("p");
+		title = document.createElement("p"),
+		close = document.createElement("button");
 
-		hrs.innerHTML = this.hrs ? ((this.hrs < 10) ? `0${this.hrs} ` : `${this.hrs} `) : '00 ';
-		min.innerHTML = this.min ? ((this.min < 10) ? `0${this.min} ` : `${this.min} `) : '00 ';
-		sec.innerHTML = this.sec ? ((this.sec < 10) ? `0${this.sec} ` : this.sec) : '00';
+		close.innerHTML = "<i class='material-icons'>close</i>";
+		hrs.innerHTML = this.hrs ? ((this.hrs < 10) ? `0${this.hrs}:` : `${this.hrs}:`) : '00:';
+		min.innerHTML = this.min ? ((this.min < 10) ? `0${this.min}:` : `${this.min}:`) : '00:';
+		sec.innerHTML = this.sec ? ((this.sec < 10) ? `0${this.sec}` : this.sec) : '00';
 		title.innerHTML = this.title;
 		
 		hrs.id = this.id + "_hrs";
 		min.id = this.id + "_min";
 		sec.id = this.id + "_sec";
 		title.id = this.id + "_title";
+		close.id = this.id + "_close";
 
-		hrs.className = min.className = sec.className = "tim";
-		title.className = "titl";
+		hrs.className = min.className = sec.className = "timd";
+		ttl.className = "titl";
+		tmz.className = "tz";
+		close.className = "btn";
+		close.setAttribute("onclick","end(this)");
 
-		div.appendChild(title);
-		div.appendChild(hrs);
-		div.appendChild(min);
-		div.appendChild(sec);
+		ttl.appendChild(title);
+		tmz.appendChild(hrs);
+		tmz.appendChild(min);
+		tmz.appendChild(sec);
+
+		div.appendChild(close);
+		div.appendChild(ttl);
+		div.appendChild(tmz);
+		
 		
 		div.id = this.id;
 		div.style.backgroundColor = this.clr;
@@ -101,8 +114,8 @@ class Timers{
 		let sec = document.getElementById(`${this.id}_sec`);
 
 
-		hr.innerHTML = (this.hrs < 10) ? `0${this.hrs}` : this.hrs;
-		min.innerHTML = (this.min < 10) ? `0${this.min}` : this.min;
+		hr.innerHTML = (this.hrs < 10) ? `0${this.hrs}:` : `${this.hrs}:`;
+		min.innerHTML = (this.min < 10) ? `0${this.min}:` : `${this.min}:`;
 		sec.innerHTML = (this.sec < 10) ? `0${this.sec}` : this.sec;
 	}
 
@@ -114,12 +127,12 @@ class Timers{
 		let timer = setInterval(_=>{
 			if(this.min !== 0 || this.sec !== 0 || this.hrs !== 0){
 				if(this.sec === 0 && this.min !== 0){
-					this.sec = 59;
-					this.min = this.min - 1;
+					this.sec = 60;
+					this.min -= 1;
 				}
 				if(this.min === 0 && this.hrs !== 0){
-					this.min = 59;
-					this.hrs = this.hrs - 1;
+					this.min = 60;
+					this.hrs -= 1;
 				}
 				else{
 					this.sec -= 1;
@@ -128,7 +141,7 @@ class Timers{
 			else{
 				this.finished = true;
 				this.state = false;
-				clearInterval(this.timer);
+				return;
 			}
 			this.display();
 		},1000);
@@ -139,11 +152,10 @@ class Timers{
 
 
 function get_vals(){
-	let hrs = parseInt(document.getElementById("hrs").value);
-	let min = parseInt(document.getElementById("mins").value);
-	let sec = parseInt(document.getElementById("secs").value);
-	let title = document.getElementById("title").value;
-
+	let hrs = document.getElementById("hrs").value ? parseInt(document.getElementById("hrs").value) : 0;
+	let min = document.getElementById("mins").value ? parseInt(document.getElementById("mins").value) : 0;
+	let sec = document.getElementById("secs").value ? parseInt(document.getElementById("secs").value) : 0;
+	let title = document.getElementById("title").value ? document.getElementById("title").value : "Stuff";
 	// toggle_form();
 	if(hrs || min || sec){
 		timers.push(new Timers({hrs,min,sec,title: title}));
@@ -178,5 +190,26 @@ function toggle_timer(e){
 			timers[i].state = !timers[i].state;
 			timers[i].update_time();
 		}
+	}
+}
+
+function end(i){
+	let clo = document.getElementsByClassName("btn"),
+	ele;
+	for(let j=0; j<clo.length; j++){
+		if(clo[j] === i){
+			ele = clo[j].parentNode;
+			timers[j].hrs = timers[j].min = timers[j].sec = 0;
+			timers[j].finished = true;
+			timers[j].state = false;
+			timers[j] = null;
+		}
+	}
+	zone.removeChild(ele);
+	timers = timers.filter(k=> k!= null);
+	if(timers.length === 1){
+		zone.className = "solo";
+		timers[0].classList.remove("timr");
+		timers[0].classList.add("solo");
 	}
 }
