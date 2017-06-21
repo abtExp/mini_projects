@@ -1,10 +1,10 @@
-var btn = document.getElementById('send');
-var usr = 'user';
+const btn = document.getElementById('send');
+const usr;
 
 btn.onclick = ()=>{
-  var msg = document.getElementById('me').value;
+  let msg = document.getElementById('me').value;
   console.log(msg);
-  var data = {
+  let data = {
     'message' : msg,
     'sender' : usr,
     'time' : new Date()
@@ -31,13 +31,13 @@ function send_to_server(msg_data){
 }
 
 function display_and_cache(data){
-  var container = document.getElementById('container');
-  var mdiv = document.createElement('div');
-  var msg = document.createElement('p');
+  let container = document.getElementById('container');
+  let mdiv = document.createElement('div');
+  let msg = document.createElement('p');
   msg.innerHTML = data.message;
-  var time = document.createElement('p');
+  let time = document.createElement('p');
   time.innerHTML = data.time;
-  var usr_img = document.createElement('img');
+  let usr_img = document.createElement('img');
   usr_img.setAttribute('src','');
   usr_img.setAttribute('alt','sender\'s image');
   mdiv.appendChild(msg);
