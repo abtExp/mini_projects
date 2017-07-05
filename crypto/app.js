@@ -1,10 +1,11 @@
-const express = require('express');
-const firebase_admin = require('firebase-admin');
-const admin_acc = require(__dirname+'/cryptoAdmin.json');
-
-const msg_ctrl = require('./controllers/msg');
-const nav_ctrl = require('./controllers/nav');
-const usr_ctrl = require('./controllers/new_user');
+const express = require('express'),
+firebase_admin = require('firebase-admin'),
+admin_acc = require(__dirname+'/cryptoAdmin.json'),
+fs = require('fs'),
+crypto = require('crypto'),
+msg_ctrl = require('./controllers/msg'),
+nav_ctrl = require('./controllers/nav'),
+usr_ctrl = require('./controllers/user');
 
 firebase_admin.initializeApp({
     credential : firebase_admin.credential.cert(admin_acc),
@@ -15,7 +16,7 @@ const db = firebase_admin.database();
 
 const app = express();
 
-app.set('view engine','ejs');
+app.set('view engine', 'ejs');
 app.use(express.static('public'));
 
 msg_ctrl(app,db);

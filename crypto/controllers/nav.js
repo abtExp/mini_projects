@@ -1,15 +1,15 @@
-module.exports = app=>{
+module.exports = (app)=>{
+    app.get('/',(req,res)=>{
+        //redirect to the main page
+        res.render('main');
+    }),
 
-  //Control site navigation
+    app.get('/home/:user',(req,res)=>{
+        //redirect to specified user's home page
+        res.render('home',{ name : req.params.user });
+    })
 
-  //home page
-
-  app.get('/home/:user',(req,res)=>{
-    console.log('Visiting the home page of ' + req.params.user);
-    res.send('index/' + req.params.user);
-  });
-
-  app.get('/',(req,res)=>{
-    res.render('/main');
-  })
+    app.get('/index',(req,res)=>{
+        //something else
+    })
 }
