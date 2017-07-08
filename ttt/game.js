@@ -1,19 +1,18 @@
 let //game_mode = document.getElementById('players').value,
+game = '1';
 grid = document.getElementsByClassName('Box'),
 p1_score = document.querySelector('#p1_score'),
 p2_score = document.querySelector('#p2_score'),
 p1,
 p2,
 marked = [],
-all_weights = [],
-occurences = [],
 game_over = false;
 
 
 const weights = [[1,2,3],
                  [1,4],
                  [1,6,8],
-                 [2,3],
+                 [2,5],
                  [3,5,4,8],
                  [5,6],
                  [2,7,8],
@@ -36,19 +35,27 @@ class Player{
             if(p1.moves.length >= 2){
                 idx = get_best_move(p1);
                 if(idx === -1){
-                    idx = get_best_move(this);
+                    idx = get_best_move(p2);
                 }
                 else if(idx === -2){
                     return;
                 }
             }
-            else idx = 5;
+            else{
+                if(!marked[4]){
+                    idx = 4;
+                }
+                else{
+                    idx = 0;
+                }
+            }
         }
         else{
             game_over = true;
         }
-        marked[idx] = true;
+        marked[idx] = 1;
         this.moves.push(idx);
+        grid[idx].style.backgroundColor = '#a03288';
         check_win();
     }
 }
@@ -79,15 +86,24 @@ function get_best_move(p){
         */
     
     let best_idx = -1,
-    bst_idx_cnt = 0;
+    bst_idx_cnt = 0,
+    all_weights = [],
+    occurences = [];
+
+    for(let i=0; i<grid.length; i++){
+        occurences[i] = 0;
+    }
 
     for(let i of p.moves){
-        all_weights = Array.prototype.concat.apply(all_weights,weights[i-1]);
+        all_weights = Array.prototype.concat.apply(all_weights,weights[i]);
     }
+    
     for(let i of all_weights){
-        occurences[i]++;
+        occurences[i-1]++;
     }
 
+    console.log(all_weights);
+    console.log(occurences);
     for(let i=0; i<occurences.length; i++){
         if(occurences[i] === 2){
             bst_idx_cnt++;
@@ -101,14 +117,29 @@ function get_best_move(p){
             return -2;
         }
     }
+
+    if(best_idx === -1){
+        for(let k=0; k<all_weights.length; k++){
+            let i = find_other(all_weights[k]);
+            if(marked[i] === 0){
+                best_idx = i;
+            }
+        }
+    }
+    console.log(best_idx);
     return best_idx;
 }
 
 function find_other(w){
     for(let i=0; i<weights.length; i++){
         for(let j=0; j<weights[i].length; j++){
-            if(weights[i][j] === w){
-                return i;
+            if(weights[i][j] === w ){
+                if(marked[i] === 0){
+                    return i;
+                }
+                else{
+                    return;
+                }
             }
         }
     }
@@ -125,9 +156,10 @@ function def_players(game){
         p2 = new Player('user');
     }
 
+    
     for(let i=0; i<grid.length; i++){
         marked[i] = 0;
-        occurences[i] = 0;
+        grid[i].style.backgroundColor = '#fff';
     }
 }
 
@@ -139,6 +171,7 @@ function get_position(j){
                 marked[i] = 1;
                 p1.moves.push(i);
                 p1.moved = true;
+                grid[i].style.backgroundColor = '#008382';
                 p2.make_mov();
             }
             else{
@@ -147,7 +180,13 @@ function get_position(j){
             }
         }
     }
+    console.log(p1.moves);
+    console.log(p2.moves);
+}
+
+function reset(){
+    def_players(game);
 }
 
 
-window.onload = def_players('1');
+window.onload = def_players(game);
