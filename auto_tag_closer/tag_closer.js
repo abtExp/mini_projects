@@ -1,5 +1,11 @@
-const area = document.querySelector('#text');
-const stack = [];
+const area = document.querySelector('#text'),
+stack = [],
+tags = ['html','head','title','div','header','p',
+'a','body','textarea','form'];
+
+let s_div = document.getElementById('s'),
+suggestions = [];
+
 class tag{
 	constructor(){
 		this.name = '';
@@ -37,10 +43,28 @@ area.addEventListener('keypress',e=>{
 	}
 
 	else if(!stack[stack.length-1].gotName){
-		if(e.keyCode === 2){};
 		stack[stack.length-1].name += e.key;
+		search(stack[stack.length-1].name);
 	}
-	
 	console.log(e.keyCode);
-
 })
+
+function search(key){
+	console.log('Searching');
+	suggestions = [];
+	for(let i of tags){
+		if(i.includes(key)){
+			suggestions.push(i);			
+		}
+	}
+	show_suggestions(suggestions);
+}
+
+function show_suggestions(s){
+	s_div.innerHTML = '';
+	for(let i of s){
+		let li = document.createElement('li');
+		li.innerHTML = i;
+		s_div.appendChild(li);
+	}
+}
