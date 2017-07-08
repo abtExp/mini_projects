@@ -11,8 +11,6 @@ class tag{
 let checkState = false;
 
 area.addEventListener('keypress',e=>{
-
-	console.log(stack[stack.length-1]);
 	// 60 - < , 47 - / , 62 - >
 	
 	//creation of a new tag
