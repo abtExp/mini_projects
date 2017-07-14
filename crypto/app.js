@@ -1,8 +1,6 @@
 const express = require('express'),
 firebase_admin = require('firebase-admin'),
 admin_acc = require(__dirname+'/cryptoAdmin.json'),
-fs = require('fs'),
-crypto = require('crypto'),
 msg_ctrl = require('./controllers/msg'),
 nav_ctrl = require('./controllers/nav'),
 usr_ctrl = require('./controllers/user');

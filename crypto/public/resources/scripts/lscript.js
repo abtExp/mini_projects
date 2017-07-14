@@ -1,24 +1,21 @@
 const mail = document.getElementById('mail'),
 pass = document.getElementById('pass'),
 btn = document.getElementById('login'),
+form = document.getElementById('form'),
 glin = document.getElementById('glin'),
 flin = document.getElementById('flin'),
 pop = document.getElementById('pop_form'),
 container = document.getElementById('form_container');
-
+//dasda
 btn.addEventListener('click',_=>{
     let id = mail.value,
     passw = pass.value,
+    creds = false,
     isOK = check(id,passw),
-    creds = null,
     succ = false;
 
     if(isOK){
-        creds = {
-            mail : id,
-            pass : passw,
-            time : new Date().getTime()
-        }
+        creds = true;
     }
     else{
         generate_errors();
@@ -26,13 +23,7 @@ btn.addEventListener('click',_=>{
 
     if(creds){
         fetch(`/user_base/${id}`,{
-            method : 'POST',
-            headers : {
-                'Content-type' : 'application/json'
-            },
-            body : {
-                cred : JSON.stringify(creds)
-            }
+            method : 'POST'
         })
         .then(res=>{
             if(res.status === 200){

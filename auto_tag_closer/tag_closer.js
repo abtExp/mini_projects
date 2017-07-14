@@ -29,11 +29,14 @@ class tag{
 	}
 }
 
-let checkState = false;
+let checkState = false,
+end = 0;
 
 area.addEventListener('keypress',e=>{
 	// 60 - < , 47 - / , 62 - >
 	
+	end = area.selectionEnd;
+
 	//creation of a new tag
 	let t;
 	if(e.keyCode === 60){
@@ -41,15 +44,13 @@ area.addEventListener('keypress',e=>{
 		return;
 	}
 
-	if(e.keyCode === 8){
-		console.log('you deleted something');
-	}
-
 	if(checkState && e.keyCode === 47){
 		e.preventDefault();
-		area.value += `/${stack.pop().name}>`;
+		re_render(e.key,`${stack.pop().name}>`)
 		checkState = false;
 	}
+
+	if(checkState && e.keyCode === 33) checkState = false;
 
 	if(checkState && e.keyCode !== 47){
 		t = new tag();
@@ -62,7 +63,7 @@ area.addEventListener('keypress',e=>{
 		let [found,val] = search(stack[stack.length-1],true);
 		if(found){
 			e.preventDefault();
-			area.value += (e.key+val);
+			re_render(e.key,val);
 		}
 	}
 
@@ -75,10 +76,17 @@ area.addEventListener('keypress',e=>{
 		let [found,val] = search(stack[stack.length-1]);
 		if(found){
 			e.preventDefault();
-			area.value += (e.key+val);
+			re_render(e.key,val);
 		}
 	}
-	console.log(e.keyCode);
+	console.log(end);
+})
+
+area.addEventListener('keydown',e=>{
+	if(e.which === 8 && stack[stack.length-1].gotName === false){
+		console.log('you deleted');
+		stack[stack.length-1].name = stack[stack.length-1].name.slice(0,-1);
+	}
 })
 
 function search(key,closed=false){
@@ -102,7 +110,8 @@ function search(key,closed=false){
 			}  
 		}
 	}
-	show_suggestions(suggestions);
+	
+	show_suggestions(suggestions);	
 	return [found,val];
 }
 
@@ -113,4 +122,13 @@ function show_suggestions(s){
 		li.innerHTML = i;
 		s_div.appendChild(li);
 	}
+}
+
+function re_render(key,val){
+	let preval = area.value.substring(0,end);
+	end++;
+	preval += key+val;
+	preval += area.value.substring(end-1,area.value.length);
+	area.value = preval;
+	area.selectionEnd = end;
 }
