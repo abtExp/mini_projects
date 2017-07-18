@@ -1,9 +1,12 @@
 module.exports = (app,db)=>{
-    app.post('/user_base/:user',(req,res)=>{
+    const urlencoded = require('body-parser').urlencoded;
+    app.post('/user_base/:user',urlencoded({extended : false}),(req,res)=>{
         console.log(`Request Made for ${req.params.user}`);
         console.log(`credentials = ${req.body.name}`);
-        res.end('Success',{
-            status : 200
+        res.writeHead(200,{
+            headers :{
+                'redirect':`/home/${req.body.name}`
+            }
         });
     })
 

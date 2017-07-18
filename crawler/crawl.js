@@ -1,26 +1,23 @@
-let init_url = 'https://abtexp.github.io/web_app',
-visited_stack = [];
-url_stack = [];
+const url_stack = [],
+visited_stack = [],
+text = [];
 
-url_stack.push(init_url);
-url_stack.map(i=>{
-    if(visited_stack.find(i)) i = '';
-    else crawl(i);
-})
-
-
-function crawl(url){
+function crawl(url,keyword){
     fetch(url,{
-         headers : {
-             'Content-type' : 'text/html'
-         }   
+        headers : {
+            'Content-type':'text/html',
+            'Access-Control-Allow-Origin' : 
+        }
     })
-    .then(data=>{
-        visited_stack.push(url);
-        url_stack.pop();
-        let links = document.getElementsByTagName('a');
-        links.forEach(i=>{
-            url_stack.push(i);
-        })
+    .then(res=>{
+        if(res.status === 200){
+            console.log("Request Successfully recieved");
+        }
+    })
+    .catch(err=>{
+        console.error('Error connecting ',err);
     })
 }
+
+
+window.onload = crawl('https://github.com');

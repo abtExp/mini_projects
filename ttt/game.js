@@ -31,28 +31,12 @@ class Player{
 
     make_mov(){
         let idx;
-        if(!check_win()){
-            if(p1.moves.length >= 2){
-                idx = get_best_move(p1);
-                if(idx === -1){
-                    idx = get_best_move(p2);
-                }
-                else if(idx === -2){
-                    return;
-                }
-            }
-            else{
-                if(!marked[4]){
-                    idx = 4;
-                }
-                else{
-                    idx = 0;
-                }
-            }
-        }
-        else{
-            game_over = true;
-        }
+        //check for the user's next best move and block it if win
+        //if user can't win check for self winning move
+        //if both can't win, make a move
+
+        
+
         marked[idx] = 1;
         this.moves.push(idx);
         grid[idx].style.backgroundColor = '#a03288';

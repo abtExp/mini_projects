@@ -15,7 +15,7 @@ body,html{
 
 header{
     color : #fefefe;
-    font-size : 3em;
+    font-size : 2em;
     width : 100%;
     top : 0px;
     margin-bottom : 50px;
@@ -37,7 +37,7 @@ li{
     list-style-type: none;
     color : brown;
     border : 1px solid white;
-    font-size :2em;
+    font-size :1em;
     padding : 5px;
     width: 100%;
     flex : 1;
@@ -45,7 +45,8 @@ li{
 
 p{
     color: gold;
-    font-size : 2em;
+    font-size : 1em;
+    font-weight: bold;
 }
 
 #u{
@@ -56,6 +57,7 @@ p{
     justify-content: center;
     text-align: center;
     padding : 0px;
+    font-size: 1em;
 }
 
 #text{
@@ -69,4 +71,24 @@ p{
     border : 5px dashed #008382;
     padding : 8px;
     resize: none;
+}
+
+
+@media(max-width : 500px){
+    #text{
+        width : 100%;
+        margin-top : 200px;
+    }
+    #s{
+        position : fixed;
+        top : 0px;
+        width : 80%;
+
+    }
+    li{
+        background : #ddd;
+    }
+    header{
+        display : none;
+    }
 }

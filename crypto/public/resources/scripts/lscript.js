@@ -8,46 +8,19 @@ pop = document.getElementById('pop_form'),
 container = document.getElementById('form_container');
 //dasda
 btn.addEventListener('click',_=>{
-    let id = mail.value,
-    passw = pass.value,
-    creds = false,
-    isOK = check(id,passw),
-    succ = false;
+    fetch(`userbase/${mail.value}`,{
+        method : 'POST'
+    })
+    .then(res=>{
+        if(res.status === 200){
+            console.log('Logged in');
+        }
+    })
+    .catch(err=>{
+        console.log(err);
+    })
 
-    if(isOK){
-        creds = true;
-    }
-    else{
-        generate_errors();
-    }
-
-    if(creds){
-        fetch(`/user_base/${id}`,{
-            method : 'POST'
-        })
-        .then(res=>{
-            if(res.status === 200){
-                succ = true;
-                console.log('Success');
-                console.log(res.cred);
-            }
-        })
-        .catch(err=>{
-            console.error('Error finding the user');
-        })
-    }
-
-    if(succ){
-        fetch(`/home/${creds.id}`)
-        .catch(err =>{
-            console.error("An Error Occured");
-        })
-    }
-    else{
-        console.log("NAH< NOR +T");
-    }
-
-
+    // form.submit();
 })
 
 function check(id,pass){
