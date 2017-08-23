@@ -186,7 +186,14 @@ function re_render(key, val) {
 
 button.addEventListener('click', () => {
     let html = area.value;
-    console.log(html);
-    let win = window.open();
-    win.document.write(html);
+    if(determine(html)){
+        let win = window.open();
+       win.document.write(html);
+    }
+    else eval(html);
 })
+
+
+function determine(text){
+    return text.match(/\<|\>/);
+}
