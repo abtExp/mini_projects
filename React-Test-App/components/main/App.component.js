@@ -1,0 +1,16 @@
+import { React } from 'react';
+import { Router, Route, Link } from 'react-router';
+
+export default class App extends React.Component{
+    constructor(){
+        super();
+    }
+
+    render(){
+        return(
+            <div>
+                {props.children}
+            </div>
+        )
+    }
+}

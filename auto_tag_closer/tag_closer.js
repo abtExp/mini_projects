@@ -155,7 +155,7 @@ function search(key, closed = false) {
             found = true;
             if (i.auto_close === false && closed === true) {
                 stack.pop();
-                val = `</${key.name}>`;
+                val = `\n</${key.name}>`;
             } else if (i.auto_close) {
                 stack.pop();
                 val = ' />';
