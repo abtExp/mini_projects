@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build": "webpack --watch"
   },
   "keywords": [],
   "author": "",
@@ -20,6 +20,7 @@
     "react-router": "^4.2.0"
   },
   "devDependencies": {
+    "express": "^4.15.4",
     "uglifyjs-webpack-plugin": "^0.4.6",
     "webpack": "^3.5.5",
     "webpack-dev-server": "^2.7.1"

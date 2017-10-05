@@ -5,7 +5,7 @@ module.exports = {
         Shell: './components/main/Shell.component.js'
     },
     output: {
-        path: path.resolve(`${__dirname}./build`),
+        path: path.resolve(__dirname,'build'),
         filename: '[name].component.min.js'
     },
     module: {
@@ -14,9 +14,9 @@ module.exports = {
             exclude: [/node_modules/],
             loader: 'babel-loader',
             query: {
-                plugins: [new uglify()],
                 presets: ['es2015', 'react']
             }
         }]
-    }
+    },
+    plugins : [new uglify()]
 }

@@ -1,4 +1,4 @@
-import { React } from 'react';
+import React from 'react';
 import { Router, Route, Link } from 'react-router';
 
 export default class App extends React.Component{
@@ -7,10 +7,12 @@ export default class App extends React.Component{
     }
 
     render(){
+        if(this.props.state === 'online')
         return(
             <div>
-                {props.children}
+                <h1>Hi</h1>
             </div>
         )
+    else return(<div><h1>Looks like you're offline</h1></div>)
     }
 }
